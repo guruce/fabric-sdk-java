@@ -90,4 +90,9 @@ class ChaincodeActionDeserializer {
 
     }
 
+    // changes to get chain code event
+    ByteString getChainEvent() {
+        return getChaincodeAction().getEvents();
+    }
+
 }

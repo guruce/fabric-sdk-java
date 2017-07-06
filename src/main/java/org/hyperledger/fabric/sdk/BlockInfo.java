@@ -23,6 +23,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.hyperledger.fabric.protos.common.Common.Block;
 import org.hyperledger.fabric.protos.ledger.rwset.Rwset.TxReadWriteSet;
 import org.hyperledger.fabric.protos.peer.Chaincode.ChaincodeInput;
+import org.hyperledger.fabric.protos.peer.ChaincodeEventOuterClass;
 import org.hyperledger.fabric.sdk.exception.InvalidProtocolBufferRuntimeException;
 import org.hyperledger.fabric.sdk.transaction.ProtoUtils;
 
@@ -299,6 +300,16 @@ public class BlockInfo {
 
                 return transactionAction.getPayload().getAction().getProposalResponsePayload().getExtension().getResponseMessageBytes();
 
+            }
+
+            // Retrieve Chain code event payload
+            public byte[] getCCEventPayload() throws InvalidProtocolBufferException {
+                ByteString eventByteString = transactionAction.getPayload().getAction().getProposalResponsePayload().getExtension().getChainEvent();
+
+                if (null != eventByteString) {
+                    return ChaincodeEventOuterClass.ChaincodeEvent.parseFrom(eventByteString).getPayload().toByteArray();
+                }
+                return null;
             }
 
             public byte[] getProposalResponsePayload() {
